@@ -5,3 +5,5 @@ dist/
 *.db-wal
 .env
 .vite/
+.vs/
+coverage/
