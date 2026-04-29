@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/index.js",
-    "start": "node src/index.js",
-    "test": "node --test"
+    "dev": "node --experimental-sqlite --watch src/index.js",
+    "start": "node --experimental-sqlite src/index.js",
+    "test": "node --experimental-sqlite --test"
   },
   "dependencies": {
     "express": "^4.21.0"
