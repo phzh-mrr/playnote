@@ -23,3 +23,51 @@ body {
 h1 {
   margin-top: 0;
 }
+
+.note-form {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.note-form__label {
+  font-weight: 600;
+}
+
+.note-form__input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font: inherit;
+  resize: vertical;
+}
+
+.note-form__button {
+  width: fit-content;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #2563eb;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.note-form__button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.note-form__message {
+  margin-top: 1rem;
+}
+
+.note-form__message--success {
+  color: #166534;
+}
+
+.note-form__message--error {
+  color: #b91c1c;
+}

@@ -1,8 +1,74 @@
+import { useState } from 'react'
+
+export const APP_TITLE = 'Playnote'
+export const SAVE_BUTTON_LABEL = 'Save note'
+
 export default function App() {
+  const [text, setText] = useState('')
+  const [status, setStatus] = useState('idle')
+  const [message, setMessage] = useState('')
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    const trimmedText = text.trim()
+
+    if (!trimmedText) {
+      setStatus('error')
+      setMessage('Enter a note before saving.')
+      return
+    }
+
+    setStatus('saving')
+    setMessage('')
+
+    try {
+      const response = await fetch('/api/notes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text: trimmedText })
+      })
+
+      if (!response.ok) {
+        throw new Error('Request failed')
+      }
+
+      setText('')
+      setStatus('success')
+      setMessage('Note saved.')
+    } catch {
+      setStatus('error')
+      setMessage('Saving failed.')
+    }
+  }
+
   return (
     <main className="app-shell">
-      <h1>Playnote</h1>
+      <h1>{APP_TITLE}</h1>
       <p>Node + React + SQLite playground.</p>
+      <form className="note-form" onSubmit={handleSubmit}>
+        <label className="note-form__label" htmlFor="note-text">
+          New note
+        </label>
+        <textarea
+          id="note-text"
+          className="note-form__input"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          rows="4"
+          placeholder="Write something to store in SQLite"
+        />
+        <button className="note-form__button" type="submit" disabled={status === 'saving'}>
+          {status === 'saving' ? 'Saving...' : SAVE_BUTTON_LABEL}
+        </button>
+      </form>
+      {message ? (
+        <p className={`note-form__message note-form__message--${status === 'error' ? 'error' : 'success'}`}>
+          {message}
+        </p>
+      ) : null}
     </main>
   )
 }
