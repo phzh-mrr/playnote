@@ -25,5 +25,23 @@ export function createApp({ notesRepository }) {
     res.status(201).json(note)
   })
 
+  app.delete('/api/notes/:id', (req, res) => {
+    const id = Number(req.params.id)
+
+    if (!Number.isInteger(id) || id <= 0) {
+      res.status(400).json({ error: 'A valid note id is required.' })
+      return
+    }
+
+    const deleted = notesRepository.deleteNote(id)
+
+    if (!deleted) {
+      res.status(404).json({ error: 'Note not found.' })
+      return
+    }
+
+    res.status(204).end()
+  })
+
   return app
 }

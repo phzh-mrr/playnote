@@ -93,3 +93,44 @@ test('POST /api/notes rejects empty text', async () => {
     assert.deepEqual(body, { error: 'Text is required.' })
   })
 })
+
+test('DELETE /api/notes/:id removes an existing note', async () => {
+  await withServer(async (server) => {
+    const { port } = server.address()
+
+    const createResponse = await fetch(`http://127.0.0.1:${port}/api/notes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ text: 'Delete me' })
+    })
+
+    const createdNote = await createResponse.json()
+    const deleteResponse = await fetch(`http://127.0.0.1:${port}/api/notes/${createdNote.id}`, {
+      method: 'DELETE'
+    })
+
+    assert.equal(deleteResponse.status, 204)
+
+    const listResponse = await fetch(`http://127.0.0.1:${port}/api/notes`)
+    const notes = await listResponse.json()
+
+    assert.equal(listResponse.status, 200)
+    assert.equal(notes.length, 0)
+  })
+})
+
+test('DELETE /api/notes/:id returns 404 for a missing note', async () => {
+  await withServer(async (server) => {
+    const { port } = server.address()
+    const response = await fetch(`http://127.0.0.1:${port}/api/notes/999`, {
+      method: 'DELETE'
+    })
+
+    const body = await response.json()
+
+    assert.equal(response.status, 404)
+    assert.deepEqual(body, { error: 'Note not found.' })
+  })
+})

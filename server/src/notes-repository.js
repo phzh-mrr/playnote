@@ -28,6 +28,11 @@ export function createNotesRepository(databasePath = 'playnote.db') {
     WHERE id = ?
   `)
 
+  const deleteNoteStatement = database.prepare(`
+    DELETE FROM notes
+    WHERE id = ?
+  `)
+
   return {
     createNote(text) {
       const createdAt = new Date().toISOString()
@@ -37,6 +42,11 @@ export function createNotesRepository(databasePath = 'playnote.db') {
     },
     listNotes() {
       return listNotesStatement.all()
+    },
+    deleteNote(id) {
+      const result = deleteNoteStatement.run(id)
+
+      return result.changes > 0
     },
     close() {
       database.close()
