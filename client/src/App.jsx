@@ -4,6 +4,8 @@ export const APP_TITLE = 'Playnote'
 export const SAVE_BUTTON_LABEL = 'Save note'
 export const NOTES_SECTION_TITLE = 'Saved notes'
 export const DELETE_BUTTON_LABEL = 'Delete'
+export const DARK_MODE_LABEL = 'Dark mode'
+export const LIGHT_MODE_LABEL = 'Light mode'
 
 export default function App() {
   const [text, setText] = useState('')
@@ -11,6 +13,17 @@ export default function App() {
   const [message, setMessage] = useState('')
   const [notes, setNotes] = useState([])
   const [notesStatus, setNotesStatus] = useState('loading')
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('playnote-dark-mode') === 'true')
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+
+    localStorage.setItem('playnote-dark-mode', darkMode)
+  }, [darkMode])
 
   useEffect(() => {
     loadNotes()
@@ -94,6 +107,14 @@ export default function App() {
 
   return (
     <main className="app-shell">
+      <button
+        className="theme-toggle"
+        type="button"
+        onClick={() => setDarkMode((previousValue) => !previousValue)}
+        aria-pressed={darkMode}
+      >
+        {darkMode ? LIGHT_MODE_LABEL : DARK_MODE_LABEL}
+      </button>
       <h1>{APP_TITLE}</h1>
       <p>A quiet place for your thoughts.</p>
       <form className="note-form" onSubmit={handleSubmit}>
