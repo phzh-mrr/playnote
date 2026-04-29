@@ -1,12 +1,37 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const APP_TITLE = 'Playnote'
 export const SAVE_BUTTON_LABEL = 'Save note'
+export const NOTES_SECTION_TITLE = 'Saved notes'
 
 export default function App() {
   const [text, setText] = useState('')
   const [status, setStatus] = useState('idle')
   const [message, setMessage] = useState('')
+  const [notes, setNotes] = useState([])
+  const [notesStatus, setNotesStatus] = useState('loading')
+
+  useEffect(() => {
+    loadNotes()
+  }, [])
+
+  async function loadNotes() {
+    setNotesStatus('loading')
+
+    try {
+      const response = await fetch('/api/notes')
+
+      if (!response.ok) {
+        throw new Error('Request failed')
+      }
+
+      const loadedNotes = await response.json()
+      setNotes(loadedNotes)
+      setNotesStatus('ready')
+    } catch {
+      setNotesStatus('error')
+    }
+  }
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -38,6 +63,7 @@ export default function App() {
       setText('')
       setStatus('success')
       setMessage('Note saved.')
+      await loadNotes()
     } catch {
       setStatus('error')
       setMessage('Saving failed.')
@@ -69,6 +95,22 @@ export default function App() {
           {message}
         </p>
       ) : null}
+      <section className="notes-section">
+        <h2>{NOTES_SECTION_TITLE}</h2>
+        {notesStatus === 'loading' ? <p>Loading notes...</p> : null}
+        {notesStatus === 'error' ? <p>Loading notes failed.</p> : null}
+        {notesStatus === 'ready' && notes.length === 0 ? <p>No notes saved yet.</p> : null}
+        {notes.length > 0 ? (
+          <ul className="notes-list">
+            {notes.map((note) => (
+              <li key={note.id} className="notes-list__item">
+                <p className="notes-list__text">{note.text}</p>
+                <p className="notes-list__meta">{new Date(note.created_at).toLocaleString()}</p>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </section>
     </main>
   )
 }
