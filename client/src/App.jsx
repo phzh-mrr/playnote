@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 export const APP_TITLE = 'Playnote'
 export const SAVE_BUTTON_LABEL = 'Save note'
 export const NOTES_SECTION_TITLE = 'Saved notes'
+export const DELETE_BUTTON_LABEL = 'Delete'
 
 export default function App() {
   const [text, setText] = useState('')
@@ -30,6 +31,27 @@ export default function App() {
       setNotesStatus('ready')
     } catch {
       setNotesStatus('error')
+    }
+  }
+
+  async function handleDelete(noteId) {
+    setMessage('')
+
+    try {
+      const response = await fetch(`/api/notes/${noteId}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error('Request failed')
+      }
+
+      setStatus('success')
+      setMessage('Note deleted.')
+      await loadNotes()
+    } catch {
+      setStatus('error')
+      setMessage('Delete failed.')
     }
   }
 
@@ -73,7 +95,7 @@ export default function App() {
   return (
     <main className="app-shell">
       <h1>{APP_TITLE}</h1>
-      <p>Node + React + SQLite playground.</p>
+      <p>A quiet place for your thoughts.</p>
       <form className="note-form" onSubmit={handleSubmit}>
         <label className="note-form__label" htmlFor="note-text">
           New note
@@ -84,7 +106,7 @@ export default function App() {
           value={text}
           onChange={(event) => setText(event.target.value)}
           rows="4"
-          placeholder="Write something to store in SQLite"
+          placeholder="What's on your mind?"
         />
         <button className="note-form__button" type="submit" disabled={status === 'saving'}>
           {status === 'saving' ? 'Saving...' : SAVE_BUTTON_LABEL}
@@ -104,8 +126,13 @@ export default function App() {
           <ul className="notes-list">
             {notes.map((note) => (
               <li key={note.id} className="notes-list__item">
-                <p className="notes-list__text">{note.text}</p>
-                <p className="notes-list__meta">{new Date(note.created_at).toLocaleString()}</p>
+                <div className="notes-list__content">
+                  <p className="notes-list__text">{note.text}</p>
+                  <p className="notes-list__meta">{new Date(note.created_at).toLocaleString()}</p>
+                </div>
+                <button className="notes-list__delete" type="button" onClick={() => handleDelete(note.id)}>
+                  {DELETE_BUTTON_LABEL}
+                </button>
               </li>
             ))}
           </ul>

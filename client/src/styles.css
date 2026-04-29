@@ -1,102 +1,248 @@
+/* ─── "Her" palette ─────────────────────────────────────────────
+   Warm coral / peach / cream / soft white
+   Inspired by the intimate, minimal aesthetic of the film "Her"
+   ─────────────────────────────────────────────────────────────── */
+
 :root {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  line-height: 1.5;
+  --color-bg: #fdf6f0;
+  --color-surface: #ffffff;
+  --color-surface-hover: #fff5ee;
+  --color-coral: #e8705a;
+  --color-coral-soft: #f2a292;
+  --color-coral-deep: #c9503c;
+  --color-peach: #f8c9b8;
+  --color-cream: #fef0e6;
+  --color-text: #3d2c2c;
+  --color-text-muted: #8a706e;
+  --color-text-light: #b89e9b;
+  --color-border: #f0ddd5;
+  --color-error: #c9503c;
+  --color-success: #8a706e;
+  --radius-sm: 0.75rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.75rem;
+  --shadow-soft: 0 2px 24px rgba(200, 140, 120, 0.08);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.7;
   font-weight: 400;
-  color: #111827;
-  background: #f9fafb;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
+  min-height: 100dvh;
 }
 
 * {
   box-sizing: border-box;
 }
 
+/* ─── Shell ─────────────────────────────────────────────────── */
+
 .app-shell {
-  max-width: 720px;
+  max-width: 560px;
   margin: 0 auto;
-  padding: 3rem 1.5rem;
+  padding: 4rem 2rem 6rem;
 }
 
+/* ─── Header ────────────────────────────────────────────────── */
+
 h1 {
-  margin-top: 0;
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: var(--color-coral);
 }
+
+.app-shell > p:first-of-type {
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* ─── Note form ─────────────────────────────────────────────── */
 
 .note-form {
   display: grid;
-  gap: 0.75rem;
-  margin-top: 2rem;
+  gap: 0.875rem;
+  margin-top: 3rem;
 }
 
 .note-form__label {
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .note-form__input {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
   font: inherit;
+  font-size: 1rem;
+  color: var(--color-text);
   resize: vertical;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.note-form__input::placeholder {
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.note-form__input:focus {
+  outline: none;
+  border-color: var(--color-coral-soft);
+  box-shadow: 0 0 0 3px rgba(232, 112, 90, 0.12);
 }
 
 .note-form__button {
-  width: fit-content;
+  justify-self: start;
   border: 0;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: #2563eb;
-  color: #ffffff;
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 2rem;
+  background: var(--color-coral);
+  color: #fff;
   font: inherit;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
   cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.note-form__button:hover {
+  background: var(--color-coral-deep);
+  transform: translateY(-1px);
+}
+
+.note-form__button:active {
+  transform: translateY(0);
 }
 
 .note-form__button:disabled {
-  opacity: 0.7;
+  opacity: 0.6;
   cursor: progress;
+  transform: none;
 }
 
+/* ─── Messages ──────────────────────────────────────────────── */
+
 .note-form__message {
-  margin-top: 1rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 400;
 }
 
 .note-form__message--success {
-  color: #166534;
+  background: var(--color-cream);
+  color: var(--color-text-muted);
 }
 
 .note-form__message--error {
-  color: #b91c1c;
+  background: #fef2f0;
+  color: var(--color-error);
 }
 
+/* ─── Notes section ─────────────────────────────────────────── */
+
 .notes-section {
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
+
+.notes-section h2 {
+  margin: 0 0 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.notes-section p {
+  font-style: italic;
+  color: var(--color-text-light);
+}
+
+/* ─── Notes list ────────────────────────────────────────────── */
 
 .notes-list {
   list-style: none;
   padding: 0;
-  margin: 1rem 0 0;
+  margin: 0;
   display: grid;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .notes-list__item {
-  padding: 1rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.notes-list__item:hover {
+  border-color: var(--color-peach);
+  background: var(--color-surface-hover);
+}
+
+.notes-list__content {
+  flex: 1;
+  min-width: 0;
 }
 
 .notes-list__text {
   margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .notes-list__meta {
   margin: 0.5rem 0 0;
-  color: #6b7280;
-  font-size: 0.875rem;
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.notes-list__delete {
+  flex-shrink: 0;
+  align-self: center;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.85rem;
+  background: transparent;
+  color: var(--color-text-light);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.notes-list__delete:hover {
+  color: var(--color-error);
+  border-color: var(--color-error);
+  background: #fef2f0;
 }
