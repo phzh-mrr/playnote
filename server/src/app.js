@@ -1,9 +1,19 @@
 import express from 'express'
+import { join, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { existsSync } from 'node:fs'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const distPath = join(__dirname, '../../client/dist')
 
 export function createApp({ notesRepository }) {
   const app = express()
 
   app.use(express.json())
+
+  if (existsSync(distPath)) {
+    app.use(express.static(distPath))
+  }
 
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok' })
@@ -42,6 +52,12 @@ export function createApp({ notesRepository }) {
 
     res.status(204).end()
   })
+
+  if (existsSync(distPath)) {
+    app.get('*', (_req, res) => {
+      res.sendFile(join(distPath, 'index.html'))
+    })
+  }
 
   return app
 }
